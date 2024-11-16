@@ -1,4 +1,8 @@
-const { saveVideo, trimExistingVideo } = require('../services/videoService');
+const {
+    saveVideo,
+    trimExistingVideo,
+    mergeVideoClips,
+} = require('../services/videoService');
 const { upload, validateVideoDuration } = require('../utils/fileHandler');
 const { convertBytesToMB } = require('../utils/util');
 
@@ -40,7 +44,29 @@ const trimVideo = async (req, res, next) => {
     }
 };
 
+const mergeVideo = async (req, res, next) => {
+    try {
+        const { videoIds } = req.body;
+
+        if (!videoIds || !Array.isArray(videoIds) || videoIds.length < 2) {
+            return res
+                .status(400)
+                .json({ error: 'Provide at least two video IDs to merge' });
+        }
+
+        const mergedVideo = await mergeVideoClips(videoIds);
+
+        res.status(200).json({
+            message: 'Videos merged successfully.',
+            video: mergedVideo,
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 module.exports = {
     uploadVideo,
     trimVideo,
+    mergeVideo,
 };
