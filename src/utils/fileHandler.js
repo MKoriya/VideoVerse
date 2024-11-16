@@ -34,6 +34,19 @@ const upload = multer({
     },
 }).single('video');
 
+function getVideoMetaData(filePath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(filePath, (err, metadata) => {
+            if (err) {
+                return reject(err);
+            }
+
+            const data = metadata.format;
+            resolve(data);
+        });
+    });
+}
+
 function getVideoDuration(filePath) {
     return new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, (err, metadata) => {
@@ -60,5 +73,7 @@ async function validateVideoDuration(filePath) {
 
 module.exports = {
     upload,
+    getVideoMetaData,
+    getVideoDuration,
     validateVideoDuration,
 };

@@ -1,5 +1,6 @@
-const { saveVideo } = require('../services/videoService');
+const { saveVideo, trimExistingVideo } = require('../services/videoService');
 const { upload, validateVideoDuration } = require('../utils/fileHandler');
+const { convertBytesToMB } = require('../utils/util');
 
 const uploadVideo = async (req, res, next) => {
     upload(req, res, async (err) => {
@@ -9,13 +10,13 @@ const uploadVideo = async (req, res, next) => {
 
         try {
             const filePath = req.file.path;
-            const size = parseFloat((req.file.size / 1024 / 1024).toFixed(2)); // convert in MB
+            const size = convertBytesToMB(req.file.size);
             const duration = await validateVideoDuration(filePath);
 
             const video = await saveVideo(filePath, size, duration);
 
             res.status(200).json({
-                message: 'Video uploaded successfully.',
+                message: 'Video uploaded successfully',
                 video,
             });
         } catch (error) {
@@ -24,6 +25,22 @@ const uploadVideo = async (req, res, next) => {
     });
 };
 
+const trimVideo = async (req, res, next) => {
+    try {
+        const { videoId, start = 0, end } = req.body;
+
+        const trimmedVideo = await trimExistingVideo(videoId, start, end);
+
+        res.status(200).json({
+            message: 'Video trimmed successfully',
+            video: trimmedVideo,
+        });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 module.exports = {
     uploadVideo,
+    trimVideo,
 };
