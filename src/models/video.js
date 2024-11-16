@@ -14,7 +14,7 @@ module.exports = new EntitySchema({
             nullable: false,
         },
         size: {
-            type: 'int',
+            type: 'float',
             nullable: false,
         },
         duration: {

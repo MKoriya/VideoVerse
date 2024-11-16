@@ -1,5 +1,8 @@
-import { Router } from 'express';
+const { Router } = require('express');
+const { uploadVideo } = require('../controllers/VideoController');
 
 const router = Router();
 
-export default router;
+router.post('/upload', uploadVideo);
+
+module.exports = router;
