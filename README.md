@@ -146,7 +146,7 @@ Note: Add Authorization api token to collection before trying out the apis
 
 ### Authentication
 
-All endpoints (except `GET /api/videos/serve/:link`) require the following header:
+All endpoints (except `GET /s/:slug`) require the following header:
 
 ```json
 {
