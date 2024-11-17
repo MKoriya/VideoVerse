@@ -10,6 +10,10 @@ jest.mock('node:crypto', () => ({
 }));
 
 describe('Utility Functions', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     describe('convertBytesToMB', () => {
         it('should convert bytes to MB correctly', () => {
             const bytes = 1048576;

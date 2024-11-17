@@ -17,6 +17,10 @@ jest.mock('../../../src/utils/util', () => ({
 }));
 
 describe('getVideoBySharedLink', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should throw an error if the shared link is not found', async () => {
         const sharedLinkRepo = { findOneBy: jest.fn().mockResolvedValue(null) };
         AppDataSource.getRepository.mockReturnValue(sharedLinkRepo);
@@ -62,6 +66,10 @@ describe('getVideoBySharedLink', () => {
 });
 
 describe('createSharedLink', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should throw an error if the video is not found', async () => {
         const videoRepo = { findOneBy: jest.fn().mockResolvedValue(null) };
         const sharedLinkRepo = { create: jest.fn(), save: jest.fn() };
@@ -101,6 +109,10 @@ describe('createSharedLink', () => {
 });
 
 describe('getSharedLink', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should throw an error if the shared link is not found', async () => {
         const sharedLinkRepo = { findOneBy: jest.fn().mockResolvedValue(null) };
 

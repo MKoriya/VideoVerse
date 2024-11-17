@@ -22,6 +22,10 @@ jest.mock('fluent-ffmpeg', () => {
 });
 
 describe('getVideoMetaData', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should resolve metadata for a valid video file', async () => {
         const mockMetadata = { format: { duration: 60 } };
         ffmpeg.ffprobe.mockImplementation((filePath, cb) =>
@@ -44,6 +48,10 @@ describe('getVideoMetaData', () => {
 });
 
 describe('validateVideoDuration', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should validate the video duration successfully', async () => {
         const mockMetadata = { format: { duration: 10 } };
         ffmpeg.ffprobe.mockImplementation((filePath, cb) =>
@@ -69,6 +77,10 @@ describe('validateVideoDuration', () => {
 });
 
 describe('mergeVideos', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should merge video files successfully', async () => {
         fs.writeFileSync.mockImplementation(() => {});
         fs.unlinkSync.mockImplementation(() => {});
@@ -101,6 +113,10 @@ describe('mergeVideos', () => {
 });
 
 describe('validateTrimBounds', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should validate trim bounds successfully', () => {
         expect(() => validateTrimBounds(0, 10, 15)).not.toThrow();
     });
@@ -130,6 +146,10 @@ describe('serveVideo', () => {
         };
         fs.statSync.mockReturnValue({ size: 100 });
         fs.createReadStream.mockReturnValue({ pipe: mockRes.pipe });
+    });
+
+    afterAll(() => {
+        jest.clearAllMocks();
     });
 
     it('should serve the entire video file for download', () => {

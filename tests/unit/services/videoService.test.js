@@ -30,6 +30,10 @@ jest.mock('../../../src/utils/util', () => ({
 }));
 
 describe('saveVideo', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should save and return video details', async () => {
         const videoRepo = {
             create: jest.fn(),
@@ -55,6 +59,10 @@ describe('saveVideo', () => {
 });
 
 describe('trimExistingVideo', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should throw an error if the video is not found', async () => {
         const videoRepo = { findOneBy: jest.fn().mockResolvedValue(null) };
         AppDataSource.getRepository.mockReturnValue(videoRepo);
@@ -104,6 +112,10 @@ describe('trimExistingVideo', () => {
 });
 
 describe('mergeVideoClips', () => {
+    afterAll(() => {
+        jest.clearAllMocks();
+    });
+
     it('should throw an error if one or more videos are not found', async () => {
         const videoRepo = { find: jest.fn().mockResolvedValue([]) };
         AppDataSource.getRepository.mockReturnValue(videoRepo);
