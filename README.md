@@ -134,6 +134,12 @@ This table manages sharing links for videos, allowing users to share videos with
 
 ---
 
+## Postman Collection
+
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/23755125-606bc6ed-eff3-447d-8c44-bc2185fed4c9?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D23755125-606bc6ed-eff3-447d-8c44-bc2185fed4c9%26entityType%3Dcollection%26workspaceId%3D2b8b7987-5593-46b5-b8cc-4f13e40bb8ee)
+
+---
+
 ## References
 
 - <https://www.npmjs.com/package/fluent-ffmpeg>
