@@ -9,7 +9,10 @@ const MAX_SIZE_MB = process.env.MAX_SIZE_MB || 25;
 const MIN_DURATION_SEC = process.env.MIN_DURATION_SEC || 1;
 const MAX_DURATION_SEC = process.env.MAX_DURATION_SEC || 25;
 
-const UPLOAD_DIR = path.join(__dirname, '../../uploads');
+const UPLOAD_DIR = path.join(
+    __dirname,
+    `../../${process.env.UPLOAD_DIR || 'uploads'}`
+);
 
 // Ensure upload directory exists
 if (!fs.existsSync(UPLOAD_DIR)) {
