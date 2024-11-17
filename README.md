@@ -142,6 +142,95 @@ Note: Add Authorization api token to collection before trying out the apis
 
 ---
 
+## API Documentation
+
+### Authentication
+
+All endpoints (except `GET /api/videos/serve/:link`) require the following header:
+
+```json
+{
+  "Authorization": "Bearer yZBekCcz5zxbmXR2Fxo1jt8I5S8OFsby"
+}
+```
+
+Note: kept auth token as static value
+
+### Endpoints
+
+#### 1. **Video Upload**
+
+- **POST /api/v1.0/video/upload**
+- Uploads a video file.
+
+**Headers**:
+
+- Authorization: `Bearer yZBekCcz5zxbmXR2Fxo1jt8I5S8OFsby`
+
+**Body (Form-Data)**:
+
+- `video`: File (MP4/MOV)
+
+#### 2. **Video Trimming**
+
+- **POST /api/v1.0/video/trim**
+- Trims a video by start and end time.
+
+**Body**:
+
+```json
+{
+  "videoId": 1,
+  "start": 5,
+  "end": 15
+}
+```
+
+#### 3. **Video Merging**
+
+- **POST /api/v1.0/video/merge**
+- Merges multiple video clips.
+
+**Body**:
+
+```json
+{
+  "videoIds": [1, 2, 3]
+}
+```
+
+#### 4. **Create Shared Link**
+
+- **POST /api/v1.0/share/create**
+- Creates a time-bound shared link.
+
+**Body**:
+
+```json
+{
+  "videoId": 1,
+  "expiresIn": 30
+}
+```
+
+#### 5. **Retrieve Shared Link**
+
+- **GET /api/v1.0/share/:slug**
+- Retrieves metadata for a shared link.
+
+#### 6. **Get Shared Video**
+
+- **GET \<host\>/s/:slug**
+- Ex. <http://localhost:3000/s/7bbf0599-c1f8-464e-88ef-cd1ad2a698ce>
+- Streams or downloads a video based on the header:
+
+**Header**:
+
+- `Content-Disposition: inline` for streaming.
+- `Content-Disposition: attachment` for download.
+
+---
+
 ## References
 
 - <https://www.npmjs.com/package/fluent-ffmpeg>
