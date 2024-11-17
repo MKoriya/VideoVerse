@@ -92,6 +92,48 @@ npm run test:coverage
 
 ---
 
+## Database Schema Design
+
+### 1. **Videos Table**
+
+This table stores information about video files uploaded to the system.
+
+| Column Name   | Data Type   | Constraints          | Description                     |
+|---------------|-------------|----------------------|---------------------------------|
+| `id`          | `int`       | Primary Key, Auto Increment | Unique identifier for the video. |
+| `filePath`    | `text`      | Not Null            | Path to the video file in storage. |
+| `size`        | `float`     | Not Null            | Size of the video file (in MB). |
+| `duration`    | `int`       | Not Null            | Duration of the video (in seconds). |
+| `uploadedAt`  | `datetime`  | Default: `CURRENT_TIMESTAMP` | Timestamp of when the video was uploaded. |
+
+### 2. **Shared Links Table**
+
+This table manages sharing links for videos, allowing users to share videos with unique URLs and expiration times.
+
+| Column Name   | Data Type   | Constraints          | Description                     |
+|---------------|-------------|----------------------|---------------------------------|
+| `id`          | `int`       | Primary Key, Auto Increment | Unique identifier for the shared link. |
+| `videoId`     | `int`       | Not Null, Foreign Key | Links to the associated video in the `videos` table. |
+| `slug`        | `text`      | Not Null, Unique     | Unique slug for the shared link. |
+| `expiresAt`   | `datetime`  | Not Null            | Timestamp for when the link will expire. |
+| `createdAt`   | `datetime`  | Default: `CURRENT_TIMESTAMP` | Timestamp of when the shared link was created. |
+
+### ER Diagram
+
+```plaintext
++------------+       +------------------+
+|   Videos   |       |   Shared Links   |
++------------+       +------------------+
+| id         |<----->| videoId          |
+| filePath   |       | id               |
+| size       |       | slug             |
+| duration   |       | expiresAt        |
+| uploadedAt |       | createdAt        |
++------------+       +------------------+
+```
+
+---
+
 ## References
 
 - <https://www.npmjs.com/package/fluent-ffmpeg>
