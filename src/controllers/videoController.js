@@ -3,7 +3,7 @@ const {
     trimExistingVideo,
     mergeVideoClips,
 } = require('../services/videoService');
-const { upload, validateVideoDuration } = require('../utils/fileHandler');
+const { upload, validateVideoDuration } = require('../utils/videoHandler');
 const { convertBytesToMB } = require('../utils/util');
 
 const uploadVideo = async (req, res, next) => {

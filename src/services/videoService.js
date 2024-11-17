@@ -1,10 +1,13 @@
 const { In } = require('typeorm');
 const AppDataSource = require('../config/db');
 const { Video } = require('../models');
-const { getVideoMetaData } = require('../utils/fileHandler');
 const { convertBytesToMB } = require('../utils/util');
-const { mergeVideos } = require('../utils/videoMerger');
-const { validateTrimBounds, trimVideo } = require('../utils/videoTrimmer');
+const {
+    mergeVideos,
+    validateTrimBounds,
+    trimVideo,
+    getVideoMetaData,
+} = require('../utils/videoHandler');
 
 async function saveVideo(filePath, size, duration) {
     const videoRepo = AppDataSource.getRepository(Video);

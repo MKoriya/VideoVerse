@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const AppDataSource = require('./config/db');
-const { videoRoutes } = require('./routes');
+const { videoRoutes, shareRoutes, publicRoutes } = require('./routes');
 
 const app = express();
 
@@ -12,6 +12,9 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/v1.0/video', videoRoutes);
+app.use('/api/v1.0/share', shareRoutes);
+
+app.use('/s', publicRoutes);
 
 // Initializing DB
 AppDataSource.initialize()

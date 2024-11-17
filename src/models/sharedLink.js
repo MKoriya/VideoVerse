@@ -13,9 +13,10 @@ module.exports = new EntitySchema({
             type: 'int',
             nullable: false,
         },
-        link: {
+        slug: {
             type: 'text',
             nullable: false,
+            unique: true,
         },
         expiresAt: {
             type: 'datetime',
