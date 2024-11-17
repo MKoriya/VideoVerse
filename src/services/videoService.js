@@ -21,7 +21,7 @@ async function trimExistingVideo(videoId, start, end) {
     const videoRepo = AppDataSource.getRepository(Video);
     const video = await videoRepo.findOneBy({ id: videoId });
 
-    if (!videoId) {
+    if (!video) {
         throw new APIError(404, 'Video not found');
     }
 
@@ -52,6 +52,7 @@ async function mergeVideoClips(videoIds) {
         throw new APIError(400, 'One or more videos not found');
     }
 
+    const videoPaths = videos.map((video) => video.filePath);
     const mergedVideoPath = await mergeVideos(videoPaths);
     const { duration, size } = await getVideoMetaData(mergedVideoPath);
 
