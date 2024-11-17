@@ -8,6 +8,7 @@ const {
     trimVideo,
     getVideoMetaData,
 } = require('../utils/videoHandler');
+const APIError = require('../utils/APIError');
 
 async function saveVideo(filePath, size, duration) {
     const videoRepo = AppDataSource.getRepository(Video);
@@ -21,7 +22,7 @@ async function trimExistingVideo(videoId, start, end) {
     const video = await videoRepo.findOneBy({ id: videoId });
 
     if (!videoId) {
-        throw new Error('Video not found');
+        throw new APIError(404, 'Video not found');
     }
 
     validateTrimBounds(start, end, video.duration);
@@ -48,10 +49,9 @@ async function mergeVideoClips(videoIds) {
         },
     });
     if (videos.length !== videoIds.length) {
-        throw new Error('One or more videos not found');
+        throw new APIError(400, 'One or more videos not found');
     }
 
-    const videoPaths = videos.map((video) => video.filePath);
     const mergedVideoPath = await mergeVideos(videoPaths);
     const { duration, size } = await getVideoMetaData(mergedVideoPath);
 

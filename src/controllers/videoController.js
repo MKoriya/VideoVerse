@@ -5,6 +5,7 @@ const {
 } = require('../services/videoService');
 const { upload, validateVideoDuration } = require('../utils/videoHandler');
 const { convertBytesToMB } = require('../utils/util');
+const APIError = require('../utils/APIError');
 
 const uploadVideo = async (req, res, next) => {
     upload(req, res, async (err) => {
@@ -24,7 +25,7 @@ const uploadVideo = async (req, res, next) => {
                 video,
             });
         } catch (error) {
-            res.status(400).json({ error: error.message });
+            next(error);
         }
     });
 };
@@ -40,7 +41,7 @@ const trimVideo = async (req, res, next) => {
             video: trimmedVideo,
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 };
 
@@ -49,9 +50,7 @@ const mergeVideo = async (req, res, next) => {
         const { videoIds } = req.body;
 
         if (!videoIds || !Array.isArray(videoIds) || videoIds.length < 2) {
-            return res
-                .status(400)
-                .json({ error: 'Provide at least two video IDs to merge' });
+            throw new APIError(400, 'Provide at least two video IDs to merge');
         }
 
         const mergedVideo = await mergeVideoClips(videoIds);
@@ -61,7 +60,7 @@ const mergeVideo = async (req, res, next) => {
             video: mergedVideo,
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 };
 

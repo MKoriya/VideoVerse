@@ -5,7 +5,7 @@ const {
 } = require('../services/shareService');
 const { serveVideo } = require('../utils/videoHandler');
 
-const createLink = async (req, res) => {
+const createLink = async (req, res, next) => {
     try {
         // expiresIn time in minutes, default 1440 (1 day)
         const { videoId, expiresIn = 1440 } = req.body;
@@ -22,11 +22,11 @@ const createLink = async (req, res) => {
             link: sharedLink,
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 };
 
-const getLink = async (req, res) => {
+const getLink = async (req, res, next) => {
     try {
         const { slug } = req.params;
 
@@ -37,7 +37,7 @@ const getLink = async (req, res) => {
             link: sharedLink,
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 };
 
@@ -50,7 +50,7 @@ const serveSharedVideo = async (req, res) => {
 
         serveVideo(filePath, req, res, disposition);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        next(error);
     }
 };
 

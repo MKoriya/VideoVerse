@@ -2,6 +2,7 @@ const multer = require('multer');
 const ffmpeg = require('fluent-ffmpeg');
 const fs = require('node:fs');
 const path = require('node:path');
+const APIError = require('./APIError');
 
 // Configurable limits
 const MAX_SIZE_MB = process.env.MAX_SIZE_MB || 25;
@@ -27,7 +28,10 @@ const upload = multer({
         const fileExt = path.extname(file.originalname).toLowerCase();
         if (fileExt !== '.mp4' && fileExt !== '.mov') {
             return cb(
-                new Error('Invalid file type. Only MP4 and MOV are allowed.')
+                new APIError(
+                    400,
+                    'Invalid file type. Only MP4 and MOV are allowed'
+                )
             );
         }
         cb(null, true);
@@ -47,24 +51,12 @@ function getVideoMetaData(filePath) {
     });
 }
 
-function getVideoDuration(filePath) {
-    return new Promise((resolve, reject) => {
-        ffmpeg.ffprobe(filePath, (err, metadata) => {
-            if (err) {
-                return reject(err);
-            }
-
-            const duration = metadata.format.duration;
-            resolve(duration);
-        });
-    });
-}
-
 async function validateVideoDuration(filePath) {
-    const duration = await getVideoDuration(filePath);
+    const { duration } = await getVideoMetaData(filePath);
     if (duration < MIN_DURATION_SEC || duration > MAX_DURATION_SEC) {
         fs.unlinkSync(filePath); // remove invalid file
-        throw new Error(
+        throw new APIError(
+            400,
             `Video duration must be between ${MIN_DURATION_SEC} and ${MAX_DURATION_SEC} seconds`
         );
     }
@@ -135,12 +127,14 @@ function trimVideo(filePath, start, end) {
 
 const validateTrimBounds = (start, end, duration) => {
     if (start < 0 || start >= duration) {
-        throw new Error(
+        throw new APIError(
+            400,
             'Invalid start time. It must be within the video duration'
         );
     }
     if (end !== undefined && (end <= start || end > duration)) {
-        throw new Error(
+        throw new APIError(
+            400,
             'Invalid end time. It must be greater than start time and within the video duration'
         );
     }
@@ -199,7 +193,6 @@ function serveVideo(filePath, req, res, disposition) {
 module.exports = {
     upload,
     getVideoMetaData,
-    getVideoDuration,
     validateVideoDuration,
     mergeVideos,
     trimVideo,

@@ -1,5 +1,6 @@
 const AppDataSource = require('../config/db');
 const { Video, SharedLink } = require('../models');
+const APIError = require('../utils/APIError');
 const { generateUniqueSlug, getShareUrl } = require('../utils/util');
 
 async function createSharedLink(videoId, expiresAt) {
@@ -8,7 +9,7 @@ async function createSharedLink(videoId, expiresAt) {
 
     const video = await videoRepo.findOneBy({ id: videoId });
     if (!video) {
-        throw new Error('Video not found');
+        throw new APIError(404, 'Video not found');
     }
 
     const slug = generateUniqueSlug();
@@ -26,12 +27,12 @@ async function getSharedLink(slug) {
 
     const sharedLink = await sharedLinkRepo.findOneBy({ slug });
     if (!sharedLink) {
-        throw new Error('Shared link not found');
+        throw new APIError(404, 'Shared link not found');
     }
 
     // Check if the link has expired
     if (new Date() > new Date(sharedLink.expiresAt)) {
-        throw new Error('Shared link has expired');
+        throw new APIError(400, 'Shared link has expired');
     }
 
     return {
@@ -51,7 +52,10 @@ async function getVideoBySharedLink(slug) {
     const sharedLink = await getSharedLink(slug);
     const video = await videoRepo.findOneBy({ id: sharedLink.videoId });
     if (!video) {
-        throw new Error('Video associated with the shared link not found');
+        throw new APIError(
+            400,
+            'Video associated with the shared link not found'
+        );
     }
 
     return video.filePath;
